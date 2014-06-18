@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart', 'controls']});
+    </script>
+    <script type="text/javascript">
+    {% for product in product_list %}
+      google.setOnLoadCallback(function () {
+        var data = new google.visualization.DataTable();
+        var row;
+
+        data.addColumn('date', 'Date');
+        {% for ref in product.reference_set.all %}
+          data.addColumn('number', "{{ ref.name }} @ {{ ref.shop.name }}");
+        {% endfor %}
+
+        {% for ref in product.reference_set.all %}
+          {% with ref_number=forloop.counter %}
+          {% for price in ref.price_set.all %}
+            row = new Array({{ product.reference_set.count|add:"1"}});
+            row[0] = new Date({{ price.timestamp|date:"U" }}000);
+            row[{{ ref_number }}] = {{ price.price }};
+            data.addRow(row);
+          {% endfor %}
+          {% endwith %}
+        {% endfor %}
+
+        var options = {
+          hAxis: {title: 'Price'},
+          vAxis: {title: 'Date'},
+          lineWidth: 1
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      });
+      {% endfor %}
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>
