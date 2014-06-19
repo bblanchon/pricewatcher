@@ -20,7 +20,8 @@ class Reference(models.Model):
 	def __unicode__(self):
 		return self.url
 
-class Price(models.Model):	
-	timestamp = models.DateTimeField(auto_now=True)
+class Price(models.Model):
+	start_time = models.DateTimeField(auto_now_add=True)
+	end_time = models.DateTimeField(auto_now=True)
 	price = models.DecimalField(max_digits=8, decimal_places=2)
 	reference = models.ForeignKey(Reference)

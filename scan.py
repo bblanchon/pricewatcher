@@ -42,21 +42,18 @@ for shop in Shop.objects.all():
             price = download_price(ref.url, shop.css_select)
             print "  Found: " , price
 
-            first_record = ref.price_set.order_by("timestamp").first()
-            last_record = ref.price_set.order_by("-timestamp").first()
+            last_record = ref.price_set.order_by("-end_time").first()
 
-            if last_record != first_record and last_record.price == price:
-                price_record = last_record
+            if last_record != None and last_record.price == price:
+                last_record.save();
+                print "  Updated " , last_record.id
             else:
-                price_record = Price(reference=ref)
-
-            price_record.price = price
-            price_record.save();
-
-            print "  Saved " , price_record.id
+                new_record = Price(reference=ref, price=price)
+                new_record.save();
+                print "  Created ", new_record.id            
 
         except Exception as e:
-            print e
+            print "  Error: ", e
 
 
 
