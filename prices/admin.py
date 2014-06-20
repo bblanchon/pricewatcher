@@ -7,11 +7,8 @@ class ReferenceInline(admin.StackedInline):
 class ProductAdmin(admin.ModelAdmin):
 	inlines = [ReferenceInline]
 
-class PriceInline(admin.TabularInline):
-	model = Price
-
 class ReferenceAdmin(admin.ModelAdmin):
-	inlines = [PriceInline]
+	list_display = ('product', 'name', 'shop')
 	
 admin.site.register(Shop)
 admin.site.register(Product, ProductAdmin)
