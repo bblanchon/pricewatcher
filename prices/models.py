@@ -1,19 +1,19 @@
 from django.db import models
 
 class Shop(models.Model):
-	name = models.CharField(max_length=32)
-	url_regex = models.CharField(max_length=128)
-	css_select = models.CharField(max_length=128)
+	name = models.CharField(max_length=256)
+	url_regex = models.CharField(max_length=256)
+	css_select = models.CharField(max_length=256)
 	def __unicode__(self):
 		return self.name
 
 class Product(models.Model):
-	name = models.CharField(max_length=32)
+	name = models.CharField(max_length=256)
 	def __unicode__(self):
 		return self.name
 
 class Reference(models.Model):
-	name = models.CharField(max_length=32)
+	name = models.CharField(max_length=256)
 	product = models.ForeignKey(Product)
 	shop = models.ForeignKey(Shop)
 	url = models.URLField()
