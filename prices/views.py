@@ -6,12 +6,13 @@ def index(request):
 	for p in Product.objects.all():
 		references = []
 		for r in p.reference_set.all():
-			price = r.price_set.order_by("-end_time").first().price
-			references.append({
-				'name': r.name,
-				'shop': r.shop.name,
-				'price': price
-				})
+			price = r.price_set.order_by("-end_time").first()
+			if price != None:
+				references.append({
+					'name': r.name,
+					'shop': r.shop.name,
+					'price': price.price
+					})
 		products.append({
 			'name': p.name,
 			'references': references,
