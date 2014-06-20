@@ -9,7 +9,9 @@ class ProductAdmin(admin.ModelAdmin):
 
 class ReferenceAdmin(admin.ModelAdmin):
 	list_display = ('product', 'name', 'shop')
-	
+	list_display_links = ('name',)
+	list_filter = ('product', 'shop')
+
 admin.site.register(Shop)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Reference, ReferenceAdmin)
