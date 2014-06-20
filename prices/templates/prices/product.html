@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart', 'controls']});
+    </script>
+    <script type="text/javascript">
+      google.setOnLoadCallback(function () {
+        var data = new google.visualization.DataTable();
+        var row;
+
+        data.addColumn('date', 'Date');
+        {% for r in product.references %}
+          data.addColumn('number', "{{ r.name }} @ {{ r.shop }}");
+        {% endfor %}
+
+        {% for r in product.references %}
+          {% with ref_number=forloop.counter %}
+          {% for price in r.history %}
+            row = new Array({{ product.references|length|add:"1"}});
+            row[0] = new Date({{ price.time|date:"U" }}000);
+            row[{{ ref_number }}] = {{ price.price }};
+            data.addRow(row);
+          {% endfor %}
+          {% endwith %}
+        {% endfor %}
+
+        var options = {
+          hAxis: {title: 'Date'},
+          vAxis: {title: 'Price'},
+          lineWidth: 1
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      });
+    </script>
+  </head>
+  <body>
+    <h1>{{ product.name }}</h1>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+
+  </body>
+</html>
