@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from prices.models import Product
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def index(request):
 	products = []
 	for p in Product.objects.all():
@@ -21,6 +23,7 @@ def index(request):
 	context = {'products': products}
 	return render(request, 'prices/index.html', context)
 
+@login_required
 def product(request, pk):
 	p = get_object_or_404(Product, pk=pk)
 
