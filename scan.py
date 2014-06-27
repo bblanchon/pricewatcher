@@ -10,15 +10,17 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pricewatcher.settings")
 
 from prices.models import Shop, Reference, Price
 
-price_re = re.compile(r"(\d+).(\d{0,2})")
+price_re = re.compile(r"(?<!\d)(\d{1,3}.\d{3}|\d+).(\d{0,2})(?!\d)")
 user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11'
 
 def parse_price(string):
     m = price_re.search(string)
+    euros = re.sub('[^\d]', '',  m.group(1))
+    cents = m.group(2)
     if m and len(m.group(2)) > 0:
-        return Decimal(m.group(1) + "." + m.group(2))
+        return Decimal(euros + "." + cents)
     elif m:
-        return Decimal(m.group(1))
+        return Decimal(euros)
     else:
         return None 
 
